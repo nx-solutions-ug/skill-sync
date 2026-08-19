@@ -7,7 +7,7 @@
     "skill-sync": "./dist/cli.js"
   },
   "scripts": {
-    "build": "bun build src/cli.ts --outfile dist/cli.js --target node && chmod +x dist/cli.js",
+    "build": "bun build src/cli.ts --outfile dist/cli.js --target bun && chmod +x dist/cli.js",
     "build:bin": "bun build src/cli.ts --compile --outfile dist/skill-sync",
     "dev": "bun run src/cli.ts",
     "typecheck": "bunx tsc --noEmit"
