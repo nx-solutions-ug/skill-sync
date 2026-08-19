@@ -1,6 +1,6 @@
 {
   "name": "skill-sync",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Sync agent skills across harness directories via symlinks to a common store",
   "type": "module",
   "bin": {
