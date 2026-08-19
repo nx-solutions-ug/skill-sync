@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/nx-solutions-ug/skill-sync/compare/v1.1.0...v1.1.1) (2026-08-19)
+
+
+### Bug Fixes
+
+* regenerate bun.lock with @chronova/skill-sync name ([babb66f](https://github.com/nx-solutions-ug/skill-sync/commit/babb66f75323cfcc5745dcf020151305a88019dc))
+
 # [1.1.0](https://github.com/nx-solutions-ug/skill-sync/compare/v1.0.1...v1.1.0) (2026-08-19)
 
 
