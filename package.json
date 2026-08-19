@@ -1,6 +1,6 @@
 {
   "name": "skill-sync",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Sync agent skills across harness directories via symlinks to a common store",
   "type": "module",
   "bin": {
@@ -12,7 +12,13 @@
     "dev": "bun run src/cli.ts",
     "typecheck": "bunx tsc --noEmit"
   },
-  "keywords": ["skills", "agent", "sync", "symlink", "cli"],
+  "keywords": [
+    "skills",
+    "agent",
+    "sync",
+    "symlink",
+    "cli"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@types/bun": "latest",
