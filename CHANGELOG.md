@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/nx-solutions-ug/skill-sync/compare/v1.0.1...v1.1.0) (2026-08-19)
+
+
+### Features
+
+* rename to @chronova/skill-sync, add README, regenerate AGENTS.md ([5bf94a5](https://github.com/nx-solutions-ug/skill-sync/commit/5bf94a5c140ffacc3e417d27d3256f9076320e81))
+
 ## [1.0.1](https://github.com/nx-solutions-ug/skill-sync/compare/v1.0.0...v1.0.1) (2026-08-19)
 
 
