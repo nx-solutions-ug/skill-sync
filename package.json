@@ -1,0 +1,27 @@
+{
+  "name": "skill-sync",
+  "version": "0.1.0",
+  "description": "Sync agent skills across harness directories via symlinks to a common store",
+  "type": "module",
+  "bin": {
+    "skill-sync": "./dist/cli.js"
+  },
+  "scripts": {
+    "build": "bun build src/cli.ts --outfile dist/cli.js --target node && chmod +x dist/cli.js",
+    "build:bin": "bun build src/cli.ts --compile --outfile dist/skill-sync",
+    "dev": "bun run src/cli.ts",
+    "typecheck": "bunx tsc --noEmit"
+  },
+  "keywords": ["skills", "agent", "sync", "symlink", "cli"],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "semantic-release": "^25",
+    "@semantic-release/commit-analyzer": "^13",
+    "@semantic-release/release-notes-generator": "^14",
+    "@semantic-release/changelog": "^7",
+    "@semantic-release/npm": "^13",
+    "@semantic-release/git": "^11",
+    "@semantic-release/github": "^12"
+  }
+}
