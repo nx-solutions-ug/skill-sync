@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "skill-sync",
+      "name": "@chronova/skill-sync",
       "devDependencies": {
         "@semantic-release/changelog": "^7",
         "@semantic-release/commit-analyzer": "^13",
