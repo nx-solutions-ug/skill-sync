@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/nx-solutions-ug/skill-sync/compare/v1.1.1...v1.1.2) (2026-09-12)
+
+
+### Bug Fixes
+
+* **ci:** quote command descriptions containing a colon ([29d1b03](https://github.com/nx-solutions-ug/skill-sync/commit/29d1b03566115c922cce969ebfe436b7d2ad4f08))
+
 ## [1.1.1](https://github.com/nx-solutions-ug/skill-sync/compare/v1.1.0...v1.1.1) (2026-08-19)
 
 
