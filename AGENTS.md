@@ -36,11 +36,9 @@ src/
   clean.ts       # Broken/obsolete symlink removal
   cli.ts         # Entry point: arg parsing, 5 commands, ANSI-colored output
   index.ts       # Public API barrel (re-exports all modules + types)
-.omp/
-  agent/config.yml    # OMP model roles (minimax-m3 default, kimi-k2.6 plan, qwen3.5 vision)
-  commands/           # OMP command templates (triage-issue, label-pr, review-pr, fix-issue)
-  rules/              # Enforced rules (gh-label-idempotent, tool-paths-must-be-arrays)
-  stream-log.py       # Formats OMP JSONL output into human-readable CI log lines
+.claude/
+  commands/           # Claude Code slash commands (triage-issue, label-pr, review-pr, fix-issue)
+CLAUDE.md             # Claude Code entry point; imports AGENTS.md
 .github/workflows/    # 8 CI workflows (see CI/CD section)
 ```
 
@@ -91,7 +89,7 @@ bun run typecheck
 | `src/types.ts` | `HarnessDir`, `SkillSyncConfig` interface definitions |
 | `package.json` | Name `@chronova/skill-sync`, bin `./dist/cli.js`, build/typecheck scripts |
 | `.releaserc.json` | semantic-release config: `npmPublish: false`, changelog + git + github plugins |
-| `.omp/` | OMP agent config, command templates, enforced rules, stream-log formatter |
+| `.claude/commands/` | Claude Code slash commands invoked by the CI workflows |
 
 ## Runtime/Tooling Preferences
 
@@ -109,7 +107,7 @@ bun run typecheck
 
 1. **TypeScript typecheck** — `bunx tsc --noEmit` (run in `test.yml` and `release.yml`)
 2. **Build verification** — `bun run build` (run in `test.yml` and `release.yml`)
-3. **OMP agent code review** — AI-driven PR review via `omp-ci.yml` (not automated tests)
+3. **Claude Code review** — AI-driven PR review via `claude-ci.yml` (not automated tests)
 
 If adding tests in the future, `bun:test` (Bun's built-in runner) is the lowest-friction path since Bun is already the runtime and `@types/bun` is installed.
 
@@ -119,9 +117,9 @@ If adding tests in the future, `bun:test` (Bun's built-in runner) is the lowest-
 |---|---|---|
 | `test.yml` | push/PR to `main`, `feat/*`, `fix/*` | Typecheck + build (no tests) |
 | `release.yml` | push to `main` | semantic-release + full-changelog post-release step |
-| `omp-ci.yml` | issues, PRs, reviews | AI triage/label/review via OMP agent (minimax-m3) |
-| `omp.yml` | `/omp` issue comments | OMP agent slash-command handler |
-| `omp-fix-issue.yml` | `repository_dispatch` | AI fix-issue workflow for triaged issues |
+| `claude-ci.yml` | issues, PRs, manual dispatch | AI triage/label via Claude Code (claude-sonnet-5) |
+| `claude.yml` | `/claude` or `@claude` comments | Claude Code slash-command handler |
+| `claude-fix-issue.yml` | `repository_dispatch` | AI fix-issue workflow for triaged issues |
 | `auto-manage.yml` | issues/PRs opened | Auto-assign to `niklasschaeffer`, tag `needs-triage` |
 | `vouch-manage.yml` | discussion comments | Vouch gate via `!vouch`/`!denounce` |
 | `vouch-pr.yml` | PR opened/reopened | Vouch check — auto-close non-vouched PRs |
