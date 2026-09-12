@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/nx-solutions-ug/skill-sync/compare/v1.1.2...v1.1.3) (2026-09-12)
+
+
+### Bug Fixes
+
+* do not fail pack/publish when husky is unavailable ([5966c83](https://github.com/nx-solutions-ug/skill-sync/commit/5966c8389f100af33b9685db14159acb296ac157))
+
 ## [1.1.2](https://github.com/nx-solutions-ug/skill-sync/compare/v1.1.1...v1.1.2) (2026-09-12)
 
 
