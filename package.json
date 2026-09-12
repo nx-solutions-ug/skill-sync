@@ -23,7 +23,7 @@
     "lint:fix": "oxlint --react-plugin --vitest-plugin --import-plugin --fix",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^7",
