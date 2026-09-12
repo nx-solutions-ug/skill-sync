@@ -34,11 +34,13 @@ echo "JULES_CONTEXT=${JULES_CONTEXT:-}"
 ```
 
 The workflow sets `IS_JULES=true` when Jules (`google-labs-jules[bot]`) is involved. The `JULES_CONTEXT` value indicates the trigger:
+
 - `jules-authored-pr`: Jules created this PR (either as author or on behalf of a human) — review it and address Jules directly
 - `jules-review-submitted`: Jules posted a review — read Jules' review and respond
 - `jules-review-comment`: Jules posted a review comment/suggestion — address the specific suggestion
 
 After reading the PR in Step 2, also verify Jules involvement from the PR data:
+
 - PR author login contains `jules`
 - PR body contains `created automatically by Jules`
 - Any comment author login contains `jules`
@@ -46,6 +48,7 @@ After reading the PR in Step 2, also verify Jules involvement from the PR data:
 If `IS_JULES` is not set but any of these markers are found, treat `IS_JULES` as `true`.
 
 ## Step 1: Dedup check and re-review handling
+
 Check whether this bot has already reviewed this PR. Reviews live under the pulls API, NOT the issues API:
 
 ```bash
@@ -55,6 +58,7 @@ gh api /repos/$REPO_SLUG/pulls/$ARGUMENTS/reviews --jq '.[] | select(.user.login
 If no prior review from this bot exists, skip to the dependency summary cleanup below and continue with the review.
 
 ### 1a. Prior review exists — check if findings are addressed
+
 If a prior review exists, you MUST determine whether the findings are still relevant at the current PR head. Do NOT blanket-skip just because a review exists — the author may have pushed fixes. Fetch the bot's unresolved inline threads:
 
 ```bash
@@ -62,6 +66,7 @@ gh pr-review review view --reviewer chronova-agent --unresolved --not_outdated -
 ```
 
 Then compare each unresolved thread's `path` + `line` against the current diff (Step 3):
+
 - If some threads are still unresolved and the code hasn't changed, do NOT stop — proceed with the review. Step 6.4 will ensure you only post NEW findings not already raised in an unresolved thread.
 - If ALL unresolved threads are now resolved or the code at those lines has changed to address the findings, go to **Step 1b** (resolve and approve).
 
@@ -164,15 +169,17 @@ If found, include a line at the bottom of the summary comment:
 ```markdown
 ## Dependency Update Summary
 
-| Package | Change | Type | Recommendation |
-|---------|--------|------|----------------|
+| Package  | Change        | Type                  | Recommendation                  |
+| -------- | ------------- | --------------------- | ------------------------------- |
 | pkg-name | 1.2.3 → 1.2.4 | patch / minor / major | SAFE / REVIEW / ACTION REQUIRED |
 
 ### Notes
+
 - [Per-package notes on breaking changes, security fixes, deprecations, peer deps, or usage in src]
 ```
 
 Assign recommendation per package:
+
 - **SAFE**: Patch or minor update with no breaking changes and no usage of changed APIs in `src/`.
 - **REVIEW**: Minor update with deprecations, or changed APIs are used in `src/` but no known breakage.
 - **ACTION REQUIRED**: Major version with breaking changes, or a security vulnerability.
@@ -220,6 +227,7 @@ Address Jules' suggestions directly — if Jules proposed a change, evaluate whe
 ```
 
 If posting a comment instead of a review (e.g. for dependency updates), use `gh pr comment $ARGUMENTS --body "..."` and start the body with `@jules`.
+
 ## Step 6: Mapping findings to diff lines
 
 GitHub inline review comments MUST reference a line that exists in the PR diff. A comment that points at a line not in the diff will be rejected with an error. Follow these rules exactly.
@@ -245,16 +253,19 @@ Each diff hunk looks like:
 ### 6.2 Compute the line number for a finding
 
 For a finding on an **added or context line** (RIGHT side):
+
 - `--side RIGHT` (this is the default if omitted, but pass it explicitly for clarity)
 - `--line`: the line number in the new (post-change) file. Compute it by counting from `NEW_START` in the hunk header: the first line after the `@@` header is `NEW_START`, the next is `NEW_START + 1`, etc. Context lines and `+` lines both count; `-` lines do NOT count toward the RIGHT side.
 
 For a finding on a **removed line** (LEFT side):
+
 - `--side LEFT`
 - `--line`: the line number in the old (pre-change) file. Compute it by counting from `OLD_START` in the hunk header: the first line after the `@@` header is `OLD_START`, the next is `OLD_START + 1`, etc. Context lines and `-` lines both count; `+` lines do NOT count toward the LEFT side.
 
 ### 6.3 Multi-line range comments
 
 To comment on a range of lines (e.g. a multi-line block), set:
+
 - `--start-line`: the first line of the range.
 - `--start-side`: same as `--side`.
 - `--line`: the last line of the range.
@@ -338,12 +349,14 @@ return user;
 ````
 
 Comment body conventions:
+
 - Start each inline `--body` with a severity tag: `[P0]` critical, `[P1]` high-impact bug/security, `[P2]` moderate defect, `[P3]` low-risk nit. Then state the issue concisely and what to change.
-- **Include a `suggestion` block whenever you can propose a concrete code fix.** GitHub renders `` ```suggestion `` fenced blocks inside inline review comments as apply-able "Commit suggestion" buttons. The extension passes body content through verbatim. Include them whenever a concrete code fix can be proposed.
+- **Include a `suggestion` block whenever you can propose a concrete code fix.** GitHub renders ` ```suggestion ` fenced blocks inside inline review comments as apply-able "Commit suggestion" buttons. The extension passes body content through verbatim. Include them whenever a concrete code fix can be proposed.
 
   The suggestion block content MUST be valid replacement code for the commented line(s). For multi-line ranges (when using `--start-line`), the suggestion MUST cover the entire range from `start_line` to `line`. Do NOT include diff markers (`+`/`-`) in the suggestion — only the replacement code.
 
   Only omit the `suggestion` block when the finding is purely observational (e.g. "this function is too complex, consider refactoring") and no concrete replacement can be proposed. In that case, describe the issue and the recommended approach in prose.
+
 - Every `--path` + `--line` MUST exist in the PR diff (Step 3). If `--add-comment` fails with an error, the most likely cause is a wrong `--path`/`--line`. Re-read the diff for that file, recompute the correct line number per Step 6, and retry once. If it still fails, skip that comment and continue with the rest — do not lose the entire review over one bad line.
 
 If there are no line-specific findings, skip this step — a body-only review is valid (submit with `--event COMMENT` or `--event APPROVE` and no inline comments).
@@ -366,6 +379,7 @@ gh pr-review review --submit \
 ```
 
 Event types:
+
 - `APPROVE`: clean review, no blocking issues. `--body` is optional.
 - `REQUEST_CHANGES`: bugs, security issues, type safety violations. `--body` is required.
 - `COMMENT`: non-blocking observations, suggestions. `--body` is required.

@@ -53,23 +53,23 @@ skill-sync <command> [options]
 
 ### Commands
 
-| Command | Description |
-|---|---|
-| `sync` | Consolidate skills into the store and symlink into all harnesses |
+| Command  | Description                                                              |
+| -------- | ------------------------------------------------------------------------ |
+| `sync`   | Consolidate skills into the store and symlink into all harnesses         |
 | `status` | Show sync state of all skills (synced / partial / orphaned / store-only) |
-| `clean` | Remove broken or obsolete symlinks from harness directories |
-| `list` | List all skills and their locations |
-| `init` | Write a sample config file to `~/.config/skill-sync/config.json` |
+| `clean`  | Remove broken or obsolete symlinks from harness directories              |
+| `list`   | List all skills and their locations                                      |
+| `init`   | Write a sample config file to `~/.config/skill-sync/config.json`         |
 
 ### Options
 
-| Option | Description |
-|---|---|
-| `--dry-run` | Preview without making changes |
-| `--force` | Overwrite real directories with symlinks (sync) |
-| `--all` | Remove all store-pointing symlinks (clean) |
-| `--config <path>` | Use a custom config file |
-| `--help` | Show help |
+| Option            | Description                                     |
+| ----------------- | ----------------------------------------------- |
+| `--dry-run`       | Preview without making changes                  |
+| `--force`         | Overwrite real directories with symlinks (sync) |
+| `--all`           | Remove all store-pointing symlinks (clean)      |
+| `--config <path>` | Use a custom config file                        |
+| `--help`          | Show help                                       |
 
 ### Examples
 
@@ -133,7 +133,7 @@ bun install          # Install dependencies
 bun run src/cli.ts   # Run in dev mode
 bun run build        # Build to dist/cli.js
 bun run build:bin    # Build standalone binary
-bun run typecheck    # TypeScript type check
+bun run type-check    # TypeScript type check
 ```
 
 Requires [Bun](https://bun.sh/) 1.3+.
@@ -142,7 +142,7 @@ Requires [Bun](https://bun.sh/) 1.3+.
 
 PRs target `main` directly. Only vouched contributors or collaborators can open PRs (see [`.github/VOUCHED.td`](.github/VOUCHED.td)). Use conventional commit format (`feat:`, `fix:`, `chore:`, etc.) — semantic-release handles versioning and changelog automatically.
 
-Ensure `bun run typecheck` and `bun run build` pass before requesting review.
+Ensure `bun run type-check` and `bun run build` pass before requesting review.
 
 See [`AGENTS.md`](AGENTS.md) for detailed codebase guidance.
 

@@ -2,9 +2,9 @@
  * Scanning logic: discover skills in harness directories and in the common store.
  */
 
-import { readdir, lstat, readlink } from "node:fs/promises";
-import { join, resolve } from "node:path";
-import type { HarnessDir, SkillSyncConfig } from "./config.js";
+import { readdir, lstat, readlink } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+import type { HarnessDir, SkillSyncConfig } from './config.js';
 
 export interface SkillInfo {
   name: string;
@@ -20,13 +20,11 @@ export interface SkillInfo {
  * Scan all configured harness directories and the store.
  * Returns a map keyed by skill name.
  */
-export async function scanAll(
-  config: SkillSyncConfig,
-): Promise<Map<string, SkillInfo>> {
+export async function scanAll(config: SkillSyncConfig): Promise<Map<string, SkillInfo>> {
   const skills = new Map<string, SkillInfo>();
 
   const dirs: { harness: string; path: string }[] = [
-    { harness: "store", path: config.store },
+    { harness: 'store', path: config.store },
     ...config.harnesses.map((h) => ({ harness: h.name, path: h.path })),
   ];
 
@@ -36,7 +34,7 @@ export async function scanAll(
       await Promise.all(
         entries.map(async (entry) => {
           if (!entry.isDirectory() && !entry.isSymbolicLink()) return;
-          if (entry.name.startsWith(".")) return;
+          if (entry.name.startsWith('.')) return;
 
           const fullPath = join(dir.path, entry.name);
           await registerSkill(skills, entry.name, fullPath, dir.harness);
@@ -61,7 +59,7 @@ async function registerSkill(
   let realPath = path;
   if (isSymlink) {
     const link = await readlinkSafe(path);
-    if (link) realPath = resolve(join(path, "..", link));
+    if (link) realPath = resolve(join(path, '..', link));
   }
 
   const hasSkillMd = await hasSkillMdFile(realPath);
@@ -100,7 +98,7 @@ async function safeLstat(path: string) {
 
 async function hasSkillMdFile(dirPath: string): Promise<boolean> {
   try {
-    const file = Bun.file(join(dirPath, "SKILL.md"));
+    const file = Bun.file(join(dirPath, 'SKILL.md'));
     return await file.exists();
   } catch {
     return false;
@@ -125,14 +123,12 @@ async function safeReaddir(path: string): Promise<DirEntry[]> {
 /**
  * Get all skill names that exist in the store.
  */
-export async function scanStore(
-  config: SkillSyncConfig,
-): Promise<Set<string>> {
+export async function scanStore(config: SkillSyncConfig): Promise<Set<string>> {
   const names = new Set<string>();
   try {
     const entries = await readdir(config.store, { withFileTypes: true });
     for (const e of entries) {
-      if (e.name.startsWith(".")) continue;
+      if (e.name.startsWith('.')) continue;
       if (e.isDirectory() || e.isSymbolicLink()) names.add(e.name);
     }
   } catch {
@@ -144,14 +140,12 @@ export async function scanStore(
 /**
  * Get all skill names in a specific harness directory.
  */
-export async function scanHarness(
-  harness: HarnessDir,
-): Promise<Set<string>> {
+export async function scanHarness(harness: HarnessDir): Promise<Set<string>> {
   const names = new Set<string>();
   try {
     const entries = await readdir(harness.path, { withFileTypes: true });
     for (const e of entries) {
-      if (e.name.startsWith(".")) continue;
+      if (e.name.startsWith('.')) continue;
       if (e.isDirectory() || e.isSymbolicLink()) names.add(e.name);
     }
   } catch {

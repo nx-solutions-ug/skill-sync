@@ -60,7 +60,7 @@ bun run build
 bun run build:bin
 
 # Type check
-bun run typecheck
+bun run type-check
 ```
 
 ## Code Conventions & Common Patterns
@@ -78,18 +78,18 @@ bun run typecheck
 
 ## Important Files
 
-| File | Purpose |
-|---|---|
-| `src/cli.ts` | Entry point — arg parsing (`node:util parseArgs`), 5 command handlers, ANSI color output |
-| `src/config.ts` | `loadConfig()` + `DEFAULT_CONFIG` (store path + 4 default harnesses) |
-| `src/scanner.ts` | `scanAll()` — parallel directory scan, symlink detection, `SKILL.md` validation |
-| `src/syncer.ts` | `sync()` — 2-phase consolidate + link; `hashDir()` for conflict detection |
-| `src/status.ts` | `status()` — classifies each skill as synced/partial/orphaned/store-only |
-| `src/clean.ts` | `clean()` — removes broken or `--all` store-pointing symlinks |
-| `src/types.ts` | `HarnessDir`, `SkillSyncConfig` interface definitions |
-| `package.json` | Name `@chronova/skill-sync`, bin `./dist/cli.js`, build/typecheck scripts |
-| `.releaserc.json` | semantic-release config: `npmPublish: false`, changelog + git + github plugins |
-| `.claude/commands/` | Claude Code slash commands invoked by the CI workflows |
+| File                | Purpose                                                                                  |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| `src/cli.ts`        | Entry point — arg parsing (`node:util parseArgs`), 5 command handlers, ANSI color output |
+| `src/config.ts`     | `loadConfig()` + `DEFAULT_CONFIG` (store path + 4 default harnesses)                     |
+| `src/scanner.ts`    | `scanAll()` — parallel directory scan, symlink detection, `SKILL.md` validation          |
+| `src/syncer.ts`     | `sync()` — 2-phase consolidate + link; `hashDir()` for conflict detection                |
+| `src/status.ts`     | `status()` — classifies each skill as synced/partial/orphaned/store-only                 |
+| `src/clean.ts`      | `clean()` — removes broken or `--all` store-pointing symlinks                            |
+| `src/types.ts`      | `HarnessDir`, `SkillSyncConfig` interface definitions                                    |
+| `package.json`      | Name `@chronova/skill-sync`, bin `./dist/cli.js`, build/type-check scripts               |
+| `.releaserc.json`   | semantic-release config: `npmPublish: false`, changelog + git + github plugins           |
+| `.claude/commands/` | Claude Code slash commands invoked by the CI workflows                                   |
 
 ## Runtime/Tooling Preferences
 
@@ -113,19 +113,19 @@ If adding tests in the future, `bun:test` (Bun's built-in runner) is the lowest-
 
 ## CI/CD
 
-| Workflow | Trigger | Purpose |
-|---|---|---|
-| `test.yml` | push/PR to `main`, `feat/*`, `fix/*` | Typecheck + build (no tests) |
-| `release.yml` | push to `main` | semantic-release + full-changelog post-release step |
-| `claude-ci.yml` | issues, PRs, manual dispatch | AI triage/label via Claude Code (claude-sonnet-5) |
-| `claude.yml` | `/claude` or `@claude` comments | Claude Code slash-command handler |
-| `claude-fix-issue.yml` | `repository_dispatch` | AI fix-issue workflow for triaged issues |
-| `auto-manage.yml` | issues/PRs opened | Auto-assign to `niklasschaeffer`, tag `needs-triage` |
-| `vouch-manage.yml` | discussion comments | Vouch gate via `!vouch`/`!denounce` |
-| `vouch-pr.yml` | PR opened/reopened | Vouch check — auto-close non-vouched PRs |
+| Workflow               | Trigger                              | Purpose                                              |
+| ---------------------- | ------------------------------------ | ---------------------------------------------------- |
+| `test.yml`             | push/PR to `main`, `feat/*`, `fix/*` | Typecheck + build (no tests)                         |
+| `release.yml`          | push to `main`                       | semantic-release + full-changelog post-release step  |
+| `claude-ci.yml`        | issues, PRs, manual dispatch         | AI triage/label via Claude Code (claude-sonnet-5)    |
+| `claude.yml`           | `/claude` or `@claude` comments      | Claude Code slash-command handler                    |
+| `claude-fix-issue.yml` | `repository_dispatch`                | AI fix-issue workflow for triaged issues             |
+| `auto-manage.yml`      | issues/PRs opened                    | Auto-assign to `niklasschaeffer`, tag `needs-triage` |
+| `vouch-manage.yml`     | discussion comments                  | Vouch gate via `!vouch`/`!denounce`                  |
+| `vouch-pr.yml`         | PR opened/reopened                   | Vouch check — auto-close non-vouched PRs             |
 
 **Secrets** (org-level, automatically available): `APP_CLIENT_ID`, `APP_PRIVATE_KEY`, `OLLAMA_API_KEY`.
 
 **Vouch gate**: Only vouched contributors (`.github/VOUCHED.td`) or collaborators can open PRs. Bots are auto-allowed.
 
-**Pull requests**: Target `main` directly (no `develop` branch). Use conventional commit format. Ensure `bun run typecheck` and `bun run build` pass before requesting review.
+**Pull requests**: Target `main` directly (no `develop` branch). Use conventional commit format. Ensure `bun run type-check` and `bun run build` pass before requesting review.

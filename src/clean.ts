@@ -2,10 +2,10 @@
  * Clean logic: remove broken/obsolete symlinks from harness directories.
  */
 
-import { readdir, readlink, rm, stat } from "node:fs/promises";
-import { join, resolve } from "node:path";
-import type { SkillSyncConfig } from "./config.js";
-import { scanStore } from "./scanner.js";
+import { readdir, readlink, rm, stat } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+import type { SkillSyncConfig } from './config.js';
+import { scanStore } from './scanner.js';
 
 export interface CleanResult {
   removed: string[]; // "harness/skillname" entries removed
@@ -36,14 +36,14 @@ export async function clean(
     }
 
     for (const entry of entries) {
-      if (entry.name.startsWith(".")) continue;
+      if (entry.name.startsWith('.')) continue;
       if (!entry.isSymbolicLink()) continue;
 
       const linkPath = join(harness.path, entry.name);
       const target = await readlinkSafe(linkPath);
       if (target === null) continue;
 
-      const resolvedTarget = resolve(join(linkPath, "..", target));
+      const resolvedTarget = resolve(join(linkPath, '..', target));
 
       // Check if broken
       let targetExists = false;
@@ -66,9 +66,7 @@ export async function clean(
             await rm(linkPath, { force: true });
             result.removed.push(`${harness.name}/${entry.name}`);
           } catch (err) {
-            result.errors.push(
-              `Failed to remove ${harness.name}/${entry.name}: ${err}`,
-            );
+            result.errors.push(`Failed to remove ${harness.name}/${entry.name}: ${err}`);
           }
         } else {
           result.removed.push(`${harness.name}/${entry.name} (dry-run)`);

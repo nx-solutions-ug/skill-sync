@@ -3,19 +3,10 @@
  * into every non-sourceOnly harness directory.
  */
 
-import {
-  mkdir,
-  symlink,
-  rm,
-  readdir,
-  stat,
-  readlink,
-  copyFile,
-  lstat,
-} from "node:fs/promises";
-import { join, resolve, dirname, relative } from "node:path";
-import type { SkillSyncConfig } from "./config.js";
-import { scanAll, scanStore, scanHarness } from "./scanner.js";
+import { mkdir, symlink, rm, readdir, stat, readlink, copyFile, lstat } from 'node:fs/promises';
+import { join, resolve, dirname, relative } from 'node:path';
+import type { SkillSyncConfig } from './config.js';
+import { scanAll, scanStore } from './scanner.js';
 
 export interface SyncResult {
   consolidated: string[]; // skill names copied into the store
@@ -66,7 +57,7 @@ export async function sync(
     // Find a real (non-symlink) source to copy from
     const realSources: string[] = [];
     for (const [harness, path] of info.locations) {
-      if (harness === "store") continue;
+      if (harness === 'store') continue;
       if (!info.symlinkIn.has(harness)) {
         realSources.push(path);
       }
@@ -76,9 +67,7 @@ export async function sync(
 
     // Check for content divergence among sources
     if (realSources.length > 1) {
-      const hashes = await Promise.all(
-        realSources.map((p) => hashDir(p)),
-      );
+      const hashes = await Promise.all(realSources.map((p) => hashDir(p)));
       const uniqueHashes = new Set(hashes);
       if (uniqueHashes.size > 1) {
         result.conflicts.push({ name, paths: realSources });
@@ -95,9 +84,7 @@ export async function sync(
         await copyDir(source, dest);
         result.consolidated.push(name);
       } catch (err) {
-        result.errors.push(
-          `Failed to consolidate "${name}" from ${source}: ${err}`,
-        );
+        result.errors.push(`Failed to consolidate "${name}" from ${source}: ${err}`);
       }
     }
   }
@@ -121,9 +108,7 @@ export async function sync(
       // Check if it's already a correct symlink
       const currentTarget = await readlinkSafe(linkPath);
       const resolvedStorePath = resolve(storePath);
-      const resolvedCurrent = currentTarget
-        ? resolve(join(linkPath, "..", currentTarget))
-        : null;
+      const resolvedCurrent = currentTarget ? resolve(join(linkPath, '..', currentTarget)) : null;
 
       if (resolvedCurrent === resolvedStorePath) {
         result.skipped.push(`${harness.name}/${name}`);
@@ -150,9 +135,7 @@ export async function sync(
         await symlink(relTarget, linkPath);
         result.linked.push(`${harness.name}/${name}`);
       } catch (err) {
-        result.errors.push(
-          `Failed to link "${name}" into ${harness.name}: ${err}`,
-        );
+        result.errors.push(`Failed to link "${name}" into ${harness.name}: ${err}`);
       }
     }
   }
@@ -205,7 +188,7 @@ async function hashDir(dirPath: string): Promise<string> {
   });
   files.sort();
   let hash = 0;
-  const str = files.join("|");
+  const str = files.join('|');
   for (let i = 0; i < str.length; i++) {
     hash = ((hash << 5) - hash + str.charCodeAt(i)) | 0;
   }
@@ -219,7 +202,7 @@ async function walk(
   const entries = await readdir(dir, { withFileTypes: true });
   await Promise.all(
     entries.map(async (entry) => {
-      if (entry.name.startsWith(".")) return;
+      if (entry.name.startsWith('.')) return;
       const path = join(dir, entry.name);
       if (entry.isDirectory()) {
         await walk(path, cb);

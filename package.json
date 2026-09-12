@@ -2,32 +2,42 @@
   "name": "@chronova/skill-sync",
   "version": "1.1.2",
   "description": "Sync agent skills across harness directories via symlinks to a common store",
-  "type": "module",
+  "keywords": [
+    "agent",
+    "cli",
+    "skills",
+    "symlink",
+    "sync"
+  ],
+  "license": "MIT",
   "bin": {
     "skill-sync": "./dist/cli.js"
   },
+  "type": "module",
   "scripts": {
     "build": "bun build src/cli.ts --outfile dist/cli.js --target bun && chmod +x dist/cli.js",
     "build:bin": "bun build src/cli.ts --compile --outfile dist/skill-sync",
     "dev": "bun run src/cli.ts",
-    "typecheck": "bunx tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "lint": "oxlint --react-plugin --vitest-plugin --import-plugin",
+    "lint:fix": "oxlint --react-plugin --vitest-plugin --import-plugin --fix",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "prepare": "husky"
   },
-  "keywords": [
-    "skills",
-    "agent",
-    "sync",
-    "symlink",
-    "cli"
-  ],
-  "license": "MIT",
   "devDependencies": {
-    "@types/bun": "latest",
-    "semantic-release": "^25",
-    "@semantic-release/commit-analyzer": "^13",
-    "@semantic-release/release-notes-generator": "^14",
     "@semantic-release/changelog": "^7",
-    "@semantic-release/npm": "^13",
+    "@semantic-release/commit-analyzer": "^13",
     "@semantic-release/git": "^11",
-    "@semantic-release/github": "^12"
-  }
+    "@semantic-release/github": "^12",
+    "@semantic-release/npm": "^13",
+    "@semantic-release/release-notes-generator": "^14",
+    "@types/bun": "latest",
+    "husky": "^9.1.7",
+    "oxfmt": "^0.67.0",
+    "oxlint": "^1.82.0",
+    "semantic-release": "^25",
+    "typescript": "^6.0.0"
+  },
+  "packageManager": "bun@1.4.2"
 }

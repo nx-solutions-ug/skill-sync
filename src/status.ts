@@ -2,10 +2,10 @@
  * Status reporting: show what's in sync, what's missing, what's broken.
  */
 
-import { readlink, stat } from "node:fs/promises";
-import { resolve, join } from "node:path";
-import type { SkillSyncConfig } from "./config.js";
-import { scanAll, scanStore } from "./scanner.js";
+import { readlink, stat } from 'node:fs/promises';
+import { resolve, join } from 'node:path';
+import type { SkillSyncConfig } from './config.js';
+import { scanAll, scanStore } from './scanner.js';
 
 export interface HarnessState {
   name: string;
@@ -17,7 +17,7 @@ export interface HarnessState {
 export interface StatusEntry {
   name: string;
   /** "synced" | "partial" | "orphaned" | "store-only" */
-  state: "synced" | "partial" | "orphaned" | "store-only";
+  state: 'synced' | 'partial' | 'orphaned' | 'store-only';
   inStore: boolean;
   harnesses: HarnessState[];
 }
@@ -29,7 +29,7 @@ export async function status(config: SkillSyncConfig): Promise<StatusEntry[]> {
   const entries: StatusEntry[] = [];
 
   for (const [name, info] of allSkills) {
-    const inStore = storeNames.has(name) || info.locations.has("store");
+    const inStore = storeNames.has(name) || info.locations.has('store');
 
     const harnesses: HarnessState[] = [];
     for (const h of config.harnesses) {
@@ -46,15 +46,15 @@ export async function status(config: SkillSyncConfig): Promise<StatusEntry[]> {
     const linkedCount = harnesses.filter((hs) => hs.linked).length;
     const totalHarnesses = harnesses.length;
 
-    let state: StatusEntry["state"];
+    let state: StatusEntry['state'];
     if (inStore && linkedCount === totalHarnesses) {
-      state = "synced";
+      state = 'synced';
     } else if (inStore && linkedCount > 0 && linkedCount < totalHarnesses) {
-      state = "partial";
+      state = 'partial';
     } else if (inStore && linkedCount === 0) {
-      state = "store-only";
+      state = 'store-only';
     } else {
-      state = "orphaned";
+      state = 'orphaned';
     }
 
     entries.push({ name, state, inStore, harnesses });
@@ -80,7 +80,7 @@ async function checkLinkAsync(
     return { name: harnessName, present: true, linked: false, broken: false };
   }
 
-  const resolved = resolve(join(linkPath, "..", target));
+  const resolved = resolve(join(linkPath, '..', target));
   const pointsToStore = resolved.startsWith(store);
 
   let broken = false;
